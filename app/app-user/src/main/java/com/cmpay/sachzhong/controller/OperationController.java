@@ -2,6 +2,7 @@ package com.cmpay.sachzhong.controller;
 
 import com.cmpay.lemon.framework.annotation.QueryBody;
 import com.cmpay.lemon.framework.data.DefaultRspDTO;
+import com.cmpay.sachzhong.entity.MenuDO;
 import com.cmpay.sachzhong.entity.OperationDO;
 import com.cmpay.sachzhong.service.OperationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,17 @@ public class OperationController {
 
     @Autowired
     OperationService operationService;
+
+
+    /**
+     * 查询全部信息
+     */
+    @GetMapping("/select")
+    public DefaultRspDTO<List<OperationDO>> select()
+    {
+        List<OperationDO> list = operationService.selectList();
+        return DefaultRspDTO.newSuccessInstance(list);
+    }
 
     /**
      * 查询信息 根据ID

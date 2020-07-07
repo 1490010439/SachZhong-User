@@ -61,6 +61,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int deleteUser(int id) {
+        SqlValue sqlValue=new SqlValue();
+        sqlValue.setIntValue(id);
+        return iUserDao.deleteUser(sqlValue);
+    }
+
+    @Override
     public List<UserDO> getById(int id) {
         UserDOExample userDOExample=new UserDOExample();
         UserDOExample.Criteria criteria = userDOExample.createCriteria();
@@ -157,6 +164,24 @@ public class UserServiceImpl implements UserService {
         SqlValue sqlValue=new SqlValue();
         sqlValue.setMynode("'%"+username+"%'");
         return iUserDao.selectUserLikeName(sqlValue);
+    }
+
+    @Override
+    public PageInfo<UserDO> getLikePage(int pageNum, int pageSize, String userName) {
+
+        SqlValue sqlValue =new SqlValue();
+        sqlValue.setMynode("'%"+userName+"%'");
+
+        PageInfo<UserDO> pageInfo = null;
+        if (pageNum == 0 || pageSize == 0){
+
+            pageInfo =new PageInfo<UserDO>(iUserDao.selectUserLikeName(sqlValue));
+        }
+        else {
+            pageInfo = PageUtils.pageQueryWithCount(pageNum,pageSize,()-> iUserDao.selectUserLikeName(sqlValue));
+        }
+
+        return pageInfo;
     }
 
     @Override

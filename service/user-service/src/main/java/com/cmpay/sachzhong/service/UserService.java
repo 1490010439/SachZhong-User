@@ -1,6 +1,8 @@
 package com.cmpay.sachzhong.service;
 
+import com.cmpay.sachzhong.entity.RoleDO;
 import com.cmpay.sachzhong.entity.UserDO;
+import com.cmpay.sachzhong.utils.SqlValue;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -47,6 +49,14 @@ public interface UserService {
      * @return
      */
     int delete(int id);
+
+    /**
+     * 删除数据
+     * @param id
+     * @return
+     */
+    int  deleteUser(int id);
+
 
     /**
      * 根据ID查找
@@ -114,6 +124,8 @@ public interface UserService {
      */
      int reg(UserDO user);
 
+
+
     /**
      * @author SachZhong 钟盛勤
      * @date 2020/6/22 11:21
@@ -129,6 +141,15 @@ public interface UserService {
      *
      */
      List<UserDO> selectUserLikeName(String username);
+
+    /**
+     * @author SachZhong 钟盛勤
+     * @date 2020/6/22 11:21
+     * @info :分页
+     *
+     */
+    PageInfo<UserDO> getLikePage(int pageNum, int pageSize, String userName );
+
 
 
     /**
@@ -171,6 +192,5 @@ public interface UserService {
      *
      */
     List<UserDO> selectLike(String value);
-
 
 }

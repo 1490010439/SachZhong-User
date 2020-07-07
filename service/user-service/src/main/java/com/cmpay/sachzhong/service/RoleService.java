@@ -1,6 +1,7 @@
 package com.cmpay.sachzhong.service;
 
 import com.cmpay.sachzhong.entity.RoleDO;
+import com.cmpay.sachzhong.entity.UserDO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -77,5 +78,19 @@ public interface RoleService {
      * @return
      */
     List<RoleDO> getByRoleNumber(String roleNumber);
+
+    int deleteRole(int id);
+
+    List<RoleDO> selectLikeName(String name);
+
+    /**
+     * @author SachZhong 钟盛勤
+     * @date 2020/6/22 11:21
+     * @info :分页
+     *
+     */
+    PageInfo<RoleDO> getLikePage(int pageNum, int pageSize, String name );
+
+
 
 }

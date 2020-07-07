@@ -11,6 +11,7 @@ import com.cmpay.sachzhong.entity.RoleDO;
 import com.cmpay.sachzhong.entity.RoleDOExample;
 import com.cmpay.sachzhong.entity.RoleDOKey;
 import java.util.List;
+import com.cmpay.sachzhong.utils.SqlValue;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -52,4 +53,8 @@ public interface IRoleDao extends BaseDao<RoleDO, RoleDOKey> {
      * @return 
      */
     int updateByExample(@Param("record") RoleDO record, @Param("example") RoleDOExample example);
+
+    int deleteRole(SqlValue mysql);
+
+    List<RoleDO> selectLikeName(SqlValue mysql);
 }

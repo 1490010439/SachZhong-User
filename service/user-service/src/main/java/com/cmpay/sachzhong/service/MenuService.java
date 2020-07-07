@@ -1,6 +1,8 @@
 package com.cmpay.sachzhong.service;
 
 import com.cmpay.sachzhong.entity.MenuDO;
+import com.github.pagehelper.PageInfo;
+
 import java.util.List;
 
 /**
@@ -9,6 +11,15 @@ import java.util.List;
  * @date 2020/6/21 19:22
  */
 public interface MenuService {
+
+    /**
+     * @author SachZhong 钟盛勤
+     * @date 2020/6/22 11:21
+     * @info :查询所有列表
+     *
+     */
+    List<MenuDO> selectList();
+
 
     /**
      * 根据ID查找
@@ -59,6 +70,14 @@ public interface MenuService {
      */
     List<MenuDO> getByMenuNumber(String menuNumber);
 
+
+    /**
+     * @author SachZhong 钟盛勤
+     * @date 2020/6/22 11:21
+     * @info :分页
+     *
+     */
+    PageInfo<MenuDO> getPage(int pageNum, int pageSize, MenuDO menuDO );
 
 
 }

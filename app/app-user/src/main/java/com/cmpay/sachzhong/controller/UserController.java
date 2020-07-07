@@ -5,6 +5,8 @@ import com.cmpay.lemon.common.utils.BeanUtils;
 import com.cmpay.lemon.common.utils.JudgeUtils;
 import com.cmpay.lemon.framework.annotation.QueryBody;
 import com.cmpay.lemon.framework.data.DefaultRspDTO;
+import com.cmpay.lemon.framework.utils.PageUtils;
+import com.cmpay.sachzhong.dto.ListDTO;
 import com.cmpay.sachzhong.dto.UserByRoleDTO;
 import com.cmpay.sachzhong.dto.UserDTO;
 import com.cmpay.sachzhong.dto.UserPageRspDTO;
@@ -20,12 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -188,6 +186,11 @@ public class UserController {
         userDO.setUserPassword(userByRoleDTO.getUserPassword());
         userDO.setUserPhone(userByRoleDTO.getUserPhone());
         userDO.setUserType(userByRoleDTO.getUserType());
+        userDO.setUserDeletetype(userByRoleDTO.getUserDeletetype());
+        //设置注册时间
+        LocalDateTime localDateTime =LocalDateTime.now();
+        userDO.setUserRegtime(localDateTime);
+        userDO.setUserUpdatetime(localDateTime);
 
         //插入用户
         int result = userService.update(userDO);
@@ -223,7 +226,6 @@ public class UserController {
 
         //生成用户ID
         Integer userid = UUID.randomUUID().hashCode();
-        System.out.println("userid:"+userid);
 
         List<Integer> roleIds =userByRoleDTO.getRoleIds();
 
@@ -238,6 +240,7 @@ public class UserController {
         //设置注册时间
         LocalDateTime localDateTime =LocalDateTime.now();
         userDO.setUserRegtime(localDateTime);
+        userDO.setUserDeletetype("false");
 
         //插入用户
         int result = userService.insert(userDO);
@@ -272,11 +275,23 @@ public class UserController {
         return DefaultRspDTO.newSuccessInstance(result);
     }
 
+
     /**
      * 删除用户信息
      */
     @DeleteMapping("/delete")
-    public DefaultRspDTO<Integer> delete(@Validated @RequestBody int id) {
+    public DefaultRspDTO<Integer> delete(@Validated @RequestBody ListDTO listDTO) {
+        List<Integer> userNos=listDTO.getUserNos();
+        int result = userService.deleteUser(userNos.get(0));
+        return DefaultRspDTO.newSuccessInstance(result);
+    }
+
+
+    /**
+     * 删除用户信息
+     */
+    @DeleteMapping("/deleteById")
+    public DefaultRspDTO<Integer> deleteById(@Validated @RequestBody int id) {
 
         int result = userService.delete(id);
 
@@ -368,12 +383,28 @@ public class UserController {
      * @info :根据用户名查询
      *
      */
-    @GetMapping("/selectUserName")
-    public DefaultRspDTO<List<UserDO>> selectUserName(@Validated @QueryBody String username)
+    @GetMapping("/selectUserName1")
+    public DefaultRspDTO<List<UserDO>> selectUserName1(@Validated @QueryBody String userName)
     {
-        List<UserDO> list = userService.selectUserName(username);
+        List<UserDO> list = userService.selectUserName(userName);
+
         return DefaultRspDTO.newSuccessInstance(list);
     }
+
+    @GetMapping("/selectUserName")
+    public DefaultRspDTO<UserPageRspDTO> selectUserName(@Validated  String userName) {
+        System.out.println("userName:"+userName);
+
+        PageInfo<UserDO> pageInfo = userService.getLikePage(1, 10, userName);
+        UserPageRspDTO userRspDTO = new UserPageRspDTO();
+        userRspDTO.setUsers(BeanConvertUtils.convertList(pageInfo.getList(), UserDO.class));
+        userRspDTO.setPageNum(pageInfo.getPageNum());
+        userRspDTO.setPageSize(pageInfo.getPageSize());
+        userRspDTO.setPages(pageInfo.getPages());
+        userRspDTO.setTotal(pageInfo.getTotal());
+        return DefaultRspDTO.newSuccessInstance(userRspDTO);
+    }
+
 
     /**
      * @author SachZhong 钟盛勤

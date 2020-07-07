@@ -284,4 +284,15 @@
             </if>
         </where>
     </select>
+    <update id="deleteRole" parameterType="com.cmpay.sachzhong.utils.SqlValue">
+
+        update sachzhong_role set role_deletetype='true' where role_id=#{IntValue}
+
+    </update>
+
+    <select id="selectLikeName" parameterType="com.cmpay.sachzhong.utils.SqlValue"
+            resultMap="BaseResultMap">
+        SELECT * FROM sachzhong_role where role_name like ${mynode}
+    </select>
+
 </mapper>

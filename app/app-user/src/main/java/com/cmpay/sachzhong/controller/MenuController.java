@@ -1,10 +1,19 @@
 package com.cmpay.sachzhong.controller;
 
+import com.cmpay.lemon.common.utils.BeanUtils;
+import com.cmpay.lemon.common.utils.JudgeUtils;
 import com.cmpay.lemon.framework.annotation.QueryBody;
 import com.cmpay.lemon.framework.data.DefaultRspDTO;
+import com.cmpay.sachzhong.dto.MenuPageRspDTO;
+import com.cmpay.sachzhong.dto.UserPageRspDTO;
 import com.cmpay.sachzhong.entity.MenuDO;
+import com.cmpay.sachzhong.entity.RoleDO;
+import com.cmpay.sachzhong.entity.UserDO;
 import com.cmpay.sachzhong.service.MenuService;
+import com.cmpay.sachzhong.utils.BeanConvertUtils;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +31,34 @@ public class MenuController {
 
     @Autowired
     MenuService menuService;
+
+    /**
+     * 查询全部信息
+     */
+    @GetMapping("/select")
+    public DefaultRspDTO<List<MenuDO>> select()
+    {
+        List<MenuDO> list = menuService.selectList();
+        return DefaultRspDTO.newSuccessInstance(list);
+    }
+
+
+    @GetMapping("/list")
+    public DefaultRspDTO<MenuPageRspDTO> list(@Validated @QueryBody MenuPageRspDTO menuPageRspDTO) {
+        MenuDO menuDO = new MenuDO();
+        if (JudgeUtils.isNotNull(menuPageRspDTO.getMenus())) {
+            menuDO = BeanUtils.copyPropertiesReturnDest(new MenuDO(), menuPageRspDTO.getMenus());
+        }
+        PageInfo<MenuDO> pageInfo = menuService.getPage(menuPageRspDTO.getPageNum(), menuPageRspDTO.getPageSize(), menuDO);
+        MenuPageRspDTO menuPageRspDTO1 = new MenuPageRspDTO();
+        menuPageRspDTO1.setMenus(BeanConvertUtils.convertList(pageInfo.getList(), MenuDO.class));
+        menuPageRspDTO1.setPageNum(pageInfo.getPageNum());
+        menuPageRspDTO1.setPageSize(pageInfo.getPageSize());
+        menuPageRspDTO1.setPages(pageInfo.getPages());
+        menuPageRspDTO1.setTotal(pageInfo.getTotal());
+        return DefaultRspDTO.newSuccessInstance(menuPageRspDTO1);
+    }
+
 
     /**
      * 查询信息 根据ID

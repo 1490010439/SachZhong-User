@@ -16,6 +16,14 @@ public class OperationServiceImpl implements OperationService {
     IOperationDao iOperationDao;
 
     @Override
+    public List<OperationDO> selectList() {
+
+        OperationDOExample operationDOExample =new OperationDOExample();
+        OperationDOExample.Criteria criteria =operationDOExample.createCriteria();
+        return iOperationDao.selectByExample(operationDOExample);
+    }
+
+    @Override
     public OperationDO get(int id) {
         OperationDOKey operationDOKey =new OperationDOKey();
         operationDOKey.setOperationId(id);
