@@ -4,7 +4,9 @@ import com.cmpay.lemon.common.utils.BeanUtils;
 import com.cmpay.lemon.common.utils.JudgeUtils;
 import com.cmpay.lemon.framework.annotation.QueryBody;
 import com.cmpay.lemon.framework.data.DefaultRspDTO;
+import com.cmpay.sachzhong.dto.MenuListDTO;
 import com.cmpay.sachzhong.dto.MenuPageRspDTO;
+import com.cmpay.sachzhong.dto.RolePageRspDTO;
 import com.cmpay.sachzhong.dto.UserPageRspDTO;
 import com.cmpay.sachzhong.entity.MenuDO;
 import com.cmpay.sachzhong.entity.RoleDO;
@@ -16,7 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @classname RoleController
@@ -64,10 +69,10 @@ public class MenuController {
      * 查询信息 根据ID
      */
     @GetMapping("/getById")
-    public DefaultRspDTO< List<MenuDO>> getById(@QueryBody int id)
+    public DefaultRspDTO<MenuDO> getById(@QueryBody int id)
     {
-        List<MenuDO> list = menuService.getById(id);
-        return DefaultRspDTO.newSuccessInstance(list);
+        MenuDO menuDO = menuService.getById(id).get(0);
+        return DefaultRspDTO.newSuccessInstance(menuDO);
     }
 
     /**
@@ -85,9 +90,13 @@ public class MenuController {
     /**
      * 更新信息
      */
-    @PutMapping("/update")
-    public DefaultRspDTO<Integer> update(@QueryBody MenuDO menuDO) {
+    @PostMapping("/update")
+    public DefaultRspDTO<Integer> update(@RequestBody MenuDO menuDO) {
 
+        //设置时间
+        LocalDateTime localDateTime =LocalDateTime.now();
+        menuDO.setMenuUpdatetime(localDateTime);
+        menuDO.setMenuOpuserid(1);
         int result = menuService.update(menuDO);
 
         return DefaultRspDTO.newSuccessInstance(result);
@@ -98,7 +107,22 @@ public class MenuController {
      * 添加信息
      */
     @PostMapping("/insert")
-    public DefaultRspDTO<Integer> insert(@QueryBody MenuDO menuDO) {
+    public DefaultRspDTO<Integer> insert(@RequestBody MenuDO menuDO) {
+
+        //生成用户ID
+        Integer id = UUID.randomUUID().hashCode();
+        menuDO.setMenuId(id);
+
+        //设置时间
+        LocalDateTime localDateTime =LocalDateTime.now();
+        menuDO.setMenuFoundtime(localDateTime);
+        menuDO.setMenuUpdatetime(localDateTime);
+        //设置基本信息
+        menuDO.setMenuOpuserid(1);
+        menuDO.setMenuDeletetype("false");
+
+        String number ="SachZhong_menu_"+new Date().toString();
+        menuDO.setMenuNumber(number);
 
         int result = menuService.insert(menuDO);
 
@@ -109,10 +133,9 @@ public class MenuController {
      * 删除信息
      */
     @DeleteMapping("/delete")
-    public DefaultRspDTO<Integer> delete(@QueryBody int id) {
-
-        int result = menuService.delete(id);
-
+    public DefaultRspDTO<Integer> delete(@Validated @RequestBody MenuListDTO menuListDTO) {
+        List<Integer> menuIds = menuListDTO.getRoleIds();
+        int result = menuService.delete(menuIds.get(0));
         return DefaultRspDTO.newSuccessInstance(result);
     }
 
@@ -122,11 +145,48 @@ public class MenuController {
      * 根据 menuNumber 菜单编号 查找
      */
     @GetMapping("/getByMenuNumber")
-    public DefaultRspDTO<List<MenuDO>> getByMenuNumber(String menuNumber)
+    public DefaultRspDTO<List<MenuDO>> getByMenuNumber(@QueryBody String menuNumber)
     {
         List<MenuDO> list = menuService.getByMenuNumber(menuNumber);
         return DefaultRspDTO.newSuccessInstance(list);
     }
 
+
+    /**
+     * 删除信息
+     */
+    @DeleteMapping("/deleteMenu")
+    public DefaultRspDTO<Integer> deleteMenu(@Validated @RequestBody int id) {
+
+        int result = menuService.deleteMenu(id);
+
+        return DefaultRspDTO.newSuccessInstance(result);
+    }
+
+
+    /**
+     * 根据 name  查找
+     * @param name
+     * @return
+     */
+    @GetMapping("/selectLikeName")
+    public DefaultRspDTO<List<MenuDO>> selectLikeName(@Validated @QueryBody String name)
+    {
+        List<MenuDO> list = menuService.selectLikeName(name);
+        return DefaultRspDTO.newSuccessInstance(list);
+    }
+
+    @GetMapping("/selectLikeNamePage")
+    public DefaultRspDTO<MenuPageRspDTO> selectLikeNamePage(@Validated @QueryBody   String name) {
+        System.out.println("name:"+name);
+        PageInfo<MenuDO> pageInfo = menuService.getLikePage(1, 10, name);
+        MenuPageRspDTO menuRspDTO = new MenuPageRspDTO();
+        menuRspDTO.setMenus(BeanConvertUtils.convertList(pageInfo.getList(), MenuDO.class));
+        menuRspDTO.setPageNum(pageInfo.getPageNum());
+        menuRspDTO.setPageSize(pageInfo.getPageSize());
+        menuRspDTO.setPages(pageInfo.getPages());
+        menuRspDTO.setTotal(pageInfo.getTotal());
+        return DefaultRspDTO.newSuccessInstance(menuRspDTO);
+    }
 
 }

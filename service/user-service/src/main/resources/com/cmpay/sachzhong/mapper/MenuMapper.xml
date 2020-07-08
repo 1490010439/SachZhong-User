@@ -284,4 +284,16 @@
             </if>
         </where>
     </select>
+
+    <update id="deleteMenu" parameterType="com.cmpay.sachzhong.utils.SqlValue">
+
+        update sachzhong_menu set menu_deletetype='true' where menu_id=#{IntValue}
+
+    </update>
+
+    <select id="selectLikeName" parameterType="com.cmpay.sachzhong.utils.SqlValue"
+            resultMap="BaseResultMap">
+        SELECT * FROM sachzhong_menu where menu_name like ${mynode}
+    </select>
+
 </mapper>

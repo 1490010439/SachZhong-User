@@ -1,6 +1,7 @@
 package com.cmpay.sachzhong.service;
 
 import com.cmpay.sachzhong.entity.MenuDO;
+import com.cmpay.sachzhong.entity.RoleDO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -78,6 +79,20 @@ public interface MenuService {
      *
      */
     PageInfo<MenuDO> getPage(int pageNum, int pageSize, MenuDO menuDO );
+
+
+    int deleteMenu(int id);
+
+    List<MenuDO> selectLikeName(String name);
+
+    /**
+     * @author SachZhong 钟盛勤
+     * @date 2020/6/22 11:21
+     * @info :分页
+     *
+     */
+    PageInfo<MenuDO> getLikePage(int pageNum, int pageSize, String name );
+
 
 
 }

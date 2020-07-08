@@ -6,10 +6,10 @@ import com.cmpay.sachzhong.entity.MenuDO;
 import com.cmpay.sachzhong.entity.MenuDOExample;
 import com.cmpay.sachzhong.entity.MenuDOKey;
 import com.cmpay.sachzhong.service.MenuService;
+import com.cmpay.sachzhong.utils.SqlValue;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 @Service
 public class MenuServiceImpl implements MenuService {
@@ -43,7 +43,11 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public int update(MenuDO entity) {
-        return iMenuDao.update(entity);
+
+        MenuDOExample menuDOExample=new MenuDOExample();
+        MenuDOExample.Criteria criteria = menuDOExample.createCriteria();
+        criteria.andMenuIdEqualTo(entity.getMenuId());
+        return iMenuDao.updateByExample(entity,menuDOExample);
     }
 
     @Override
@@ -78,6 +82,37 @@ public class MenuServiceImpl implements MenuService {
         }
         else {
             pageInfo = PageUtils.pageQueryWithCount(pageNum,pageSize,()-> iMenuDao.find(menuDO));
+        }
+
+        return pageInfo;
+    }
+
+    @Override
+    public int deleteMenu(int id) {
+        SqlValue sqlValue=new SqlValue();
+        sqlValue.setIntValue(id);
+        return iMenuDao.deleteMenu(sqlValue);
+    }
+
+    @Override
+    public List<MenuDO> selectLikeName(String name) {
+        SqlValue sqlValue=new SqlValue();
+        sqlValue.setMynode("'%"+name+"%'");
+        return iMenuDao.selectLikeName(sqlValue);
+    }
+
+    @Override
+    public PageInfo<MenuDO> getLikePage(int pageNum, int pageSize, String name) {
+        SqlValue sqlValue =new SqlValue();
+        sqlValue.setMynode("'%"+name+"%'");
+
+        PageInfo<MenuDO> pageInfo = null;
+        if (pageNum == 0 || pageSize == 0){
+
+            pageInfo =new PageInfo<MenuDO>(iMenuDao.selectLikeName(sqlValue));
+        }
+        else {
+            pageInfo = PageUtils.pageQueryWithCount(pageNum,pageSize,()-> iMenuDao.selectLikeName(sqlValue));
         }
 
         return pageInfo;
