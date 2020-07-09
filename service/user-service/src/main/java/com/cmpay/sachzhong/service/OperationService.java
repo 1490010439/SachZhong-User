@@ -1,7 +1,6 @@
 package com.cmpay.sachzhong.service;
-
-import com.cmpay.sachzhong.entity.MenuDO;
 import com.cmpay.sachzhong.entity.OperationDO;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -65,5 +64,25 @@ public interface OperationService {
      * @return
      */
     List<OperationDO> getByOperationNumber(String operationNumber);
+
+    /**
+     * @author SachZhong 钟盛勤
+     * @date 2020/6/22 11:21
+     * @info :分页
+     *
+     */
+    PageInfo<OperationDO> getPage(int pageNum, int pageSize, OperationDO operationDO );
+
+    int deleteOperation(int id);
+
+    List<OperationDO> selectLikeName(String name);
+
+    /**
+     * @author SachZhong 钟盛勤
+     * @date 2020/6/22 11:21
+     * @info :分页
+     *
+     */
+    PageInfo<OperationDO> getLikePage(int pageNum, int pageSize, String name );
 
 }

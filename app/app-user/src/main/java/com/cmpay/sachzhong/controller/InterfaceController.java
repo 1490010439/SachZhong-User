@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * InterfaceController
+ * @author SachZhong 
+ * @date 2020/7/9 9:26
+*/
 @RestController
 @RequestMapping("/sachzhong/interface")
 public class InterfaceController {

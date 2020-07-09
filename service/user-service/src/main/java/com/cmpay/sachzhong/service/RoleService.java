@@ -1,7 +1,6 @@
 package com.cmpay.sachzhong.service;
 
 import com.cmpay.sachzhong.entity.RoleDO;
-import com.cmpay.sachzhong.entity.UserDO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;

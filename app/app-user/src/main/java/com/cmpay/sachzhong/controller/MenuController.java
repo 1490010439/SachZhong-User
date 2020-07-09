@@ -6,11 +6,7 @@ import com.cmpay.lemon.framework.annotation.QueryBody;
 import com.cmpay.lemon.framework.data.DefaultRspDTO;
 import com.cmpay.sachzhong.dto.MenuListDTO;
 import com.cmpay.sachzhong.dto.MenuPageRspDTO;
-import com.cmpay.sachzhong.dto.RolePageRspDTO;
-import com.cmpay.sachzhong.dto.UserPageRspDTO;
 import com.cmpay.sachzhong.entity.MenuDO;
-import com.cmpay.sachzhong.entity.RoleDO;
-import com.cmpay.sachzhong.entity.UserDO;
 import com.cmpay.sachzhong.service.MenuService;
 import com.cmpay.sachzhong.utils.BeanConvertUtils;
 import com.github.pagehelper.PageInfo;
@@ -24,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * @classname RoleController
+ * @classname MenuController
  * @author SachZhong 钟盛勤
  * @date 2020/6/22 17:21
  * 菜单接口
@@ -111,6 +107,7 @@ public class MenuController {
 
         //生成用户ID
         Integer id = UUID.randomUUID().hashCode();
+
         menuDO.setMenuId(id);
 
         //设置时间

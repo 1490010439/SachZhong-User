@@ -11,6 +11,8 @@ import com.cmpay.sachzhong.entity.OperationDO;
 import com.cmpay.sachzhong.entity.OperationDOExample;
 import com.cmpay.sachzhong.entity.OperationDOKey;
 import java.util.List;
+
+import com.cmpay.sachzhong.utils.SqlValue;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -52,4 +54,8 @@ public interface IOperationDao extends BaseDao<OperationDO, OperationDOKey> {
      * @return 
      */
     int updateByExample(@Param("record") OperationDO record, @Param("example") OperationDOExample example);
+
+    int deleteOperation(SqlValue mysql);
+
+    List<OperationDO> selectLikeName(SqlValue mysql);
 }
