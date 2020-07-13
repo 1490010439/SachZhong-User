@@ -285,4 +285,16 @@
             </if>
         </where>
     </select>
+
+    <update id="deleteOperation" parameterType="com.cmpay.sachzhong.utils.SqlValue">
+
+        update sachzhong_operation set operation_deletetype='true' where operation_id=#{IntValue}
+
+    </update>
+
+    <select id="selectLikeName" parameterType="com.cmpay.sachzhong.utils.SqlValue"
+            resultMap="BaseResultMap">
+        SELECT * FROM sachzhong_operation where operation_name like ${mynode}
+    </select>
+
 </mapper>
